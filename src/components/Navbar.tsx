@@ -1,11 +1,12 @@
 // src/components/Navbar.tsx
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import styled from "styled-components";
 import User from "@/types/User";
 import Link from "next/link";
 
 interface NavbarProps {
   bot: User;
+  userUsername:string
   user: User | null;
   navItems: { url: string; name: string }[];
   error: string | null;
@@ -24,7 +25,7 @@ const NavbarContainer = styled.div`
   top: 0;
   z-index: 100;
 `;
-
+ 
 const NavLink = styled.a`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.text};
@@ -41,8 +42,8 @@ const NavLink = styled.a`
 `;
 const Avatar = styled.img`
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   margin-left: 1rem;
 `;
@@ -93,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   const userAvatarUrl = `https://cdn.discordapp.com/avatars/${user?.id}/${user?.avatar}.png`;
-
+ 
   return (
     <NavbarContainer>
       <span>{bot.username}</span>
@@ -108,6 +109,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <>
           <UserContainer onClick={toggleDropdown}>
             <Avatar src={userAvatarUrl} alt={`${user.username} avatar`} />
+         <span >{user.username}{user.discriminator}</span>
           </UserContainer>
           {dropdownOpen && (
             <DropdownMenu open={dropdownOpen}>
