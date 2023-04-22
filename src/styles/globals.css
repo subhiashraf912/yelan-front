@@ -85,8 +85,12 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   font-family: "Cairo", sans-serif;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

@@ -10,7 +10,6 @@ interface NavbarProps {
   error: string | null;
   onLogin: () => void;
 }
-
 const NavbarContainer = styled.div`
   display: flex;
   align-items: center;
@@ -20,6 +19,9 @@ const NavbarContainer = styled.div`
   color: ${({ theme }) => theme.colors.text};
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: visible;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 `;
 
 const NavLink = styled.a`
@@ -89,7 +91,6 @@ const Navbar: React.FC<NavbarProps> = ({
     setDropdownOpen(!dropdownOpen);
   };
 
-  const botAvatarUrl = `https://cdn.discordapp.com/avatars/${bot.id}/${bot.avatar}.png`;
   const userAvatarUrl = `https://cdn.discordapp.com/avatars/${user?.id}/${user?.avatar}.png`;
 
   return (

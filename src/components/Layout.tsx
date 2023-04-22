@@ -1,4 +1,3 @@
-// src/components/Layout.tsx
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import theme from "@/theme";
@@ -41,8 +40,18 @@ const Layout: React.FC<LayoutProps> = ({
             onLogin={handleLogin}
           />
         )}
-        <main>{children}</main>
-        {/* Add your footer component here */}
+        <div style={{ backgroundColor: theme.colors.background }}>
+          <main>{children}</main>
+        </div>
+        {bot && (user || error) && navItems && (
+          <Navbar
+            bot={bot}
+            user={user || null}
+            navItems={navItems}
+            error={error}
+            onLogin={handleLogin}
+          />
+        )}
       </>
     </ThemeProvider>
   );
