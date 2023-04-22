@@ -1,18 +1,127 @@
-// src/pages/index.tsx
-import { GetServerSideProps } from "next";
-import cookies from "next-cookies";
-import Layout from "@/components/Layout";
-import { fetchUserData } from "@/utils/fetchUserData";
+import styled from "styled-components";
 import User from "@/types/User";
-import styled, { DefaultTheme } from "styled-components";
-import { fetchClientData } from "@/utils/fetchClientData";
-const navItems = [
-  { url: "/", name: "Home" },
-  { url: "/docs", name: "Docs" },
-  { url: "/commands", name: "Commands" },
-  { url: "/discord", name: "Discord Server" },
-  { url: "/invite", name: "Invite" },
-];
+import { fetchUserData } from "@/utils/api/fetchUserData";
+import { fetchClientData } from "@/utils/api/fetchClientData";
+import Layout from "@/components/Layout";
+import cookies from "next-cookies";
+import { GetServerSideProps } from "next";
+import { navItems } from "@/utils/constants";
+import { useClientData } from "@/hooks/useClientData";
+import { useUserData } from "@/hooks/useUserData";
+import Link from "next/link";
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url("https://i.redd.it/x4esim9lgly41.png");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+`;
+
+const HeroTitle = styled.h1`
+  font-size: 5rem;ne
+  margin-bottom: 1rem;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+`;
+
+const HeroSubtitle = styled.h2`
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+`;
+const HeroButton = styled.a<{ href?: string }>`
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: #fff;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.hover};
+  }
+`;
+
+const FeaturesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+`;
+
+const FeatureCard = styled.div`
+  width: 30%;
+  margin: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      30deg,
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0)
+    );
+    transform: translateY(100%);
+    transition: transform 0.3s;
+    z-index: -1;
+  }
+
+  &:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px) scale(0.9) rotate(5deg);
+
+    &::before {
+      transform: translateY(0%);
+    }
+  }
+`;
+const FeatureImageWrapper = styled.div`
+  overflow: hidden;
+  width: 100%;
+  height: 200px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+`;
+
+const FeatureImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+
+  ${FeatureCard}:hover & {
+    transform: scale(1.5);
+  }
+`;
+const FeatureText = styled.div`
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  ${FeatureCard}:hover & {
+    opacity: 1;
+  }
+`;
 
 interface HomeProps {
   accessToken?: string;
@@ -20,180 +129,72 @@ interface HomeProps {
   user?: User;
   error?: string;
 }
-interface FeatureBlockProps {
-  reverse?: boolean;
-  theme: DefaultTheme;
-}
 
-const FeaturesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 5rem 0;
-  // overflow: hidden;
-`;
-
-const FeatureBlock = styled.div<FeatureBlockProps>`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: ${({ reverse }) => (reverse ? "row-reverse" : "row")};
-  width: 80%;
-  height: 100px
-  border: 0px solid ${({ theme }) => theme.colors.border};
-  padding: 2rem;
-  margin-bottom: 2rem;
-  background-color: ${({ theme }) => theme.colors.primary};
-  border-radius: 50px;
-  opacity: 0;
-
-    transition: 0.5s;
-  filter: blur(2px);
-
-  &:hover {
-    opacity: 1;
-    transform: translateY(-20px);
-    border: 1px solid ${({ theme }) => theme.colors.border};
-    box-shadow: 0 30px 30px rgba(0, 0, 0, 1);
-    transition: 0.5s;
-    filter: blur(0px);
+const Home: React.FC<HomeProps> = ({ accessToken }) => {
+  const {
+    clientData,
+    isError: isClientDataError,
+    isLoading: isClientDataLoading,
+  } = useClientData();
+  const { userData, isError: isUserDataError } = useUserData(accessToken);
+  if (isClientDataLoading || isClientDataError) {
+    return <div>Something went wrong</div>;
   }
-`;
+  const bot = clientData?.user!;
 
-const FeatureText = styled.div`
-  width: 75%;
-  padding: 0 2rem;
-`;
-
-const FeatureImage = styled.img<FeatureBlockProps>`
-  width: 35%;
-  height:200px
-  object-fit: contain;
-  border-radius: 50px;
-  border: 0px solid ${({ theme }) => theme.colors.border};
-  transform: ${({ reverse }) =>
-    reverse
-      ? "rotateY(10deg) rotateZ(10deg) scale(0.5)"
-      : "rotateY(-10deg) rotateZ(-10deg) scale(1.1)"};
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: 0.5s;
-  filter: blur(0.2px);
-
-  &:hover {
-    border: 2px solid ${({ theme }) => theme.colors.border};
-    transform: translateY(-10px) rotateX(10deg) rotateY(0deg) rotateZ(0deg)
-      scale(1.1);
-    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.7);
-    transition: 0.5s;
-    filter: blur(0px);
-  }
-`;
-
-const IntroContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 5rem;
-  height: 100vh;
-  background: ${({ theme }) => theme.colors.background};
-  // position: relative;
-
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("https://i.redd.it/x4esim9lgly41.png");
-  background-size: cover;
-  background-position: center;
-  // opacity: 0.;
-  z-index: -1;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
-`;
-
-const MainContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-`;
-
-const Button = styled.a`
-  display: block;
-  padding: 0.5rem 1rem;
-  color: ${({ theme }) => theme.colors.text};
-  text-decoration: none;
-  background-color: transparent;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-  cursor: pointer;
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.hover};
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-const Home: React.FC<HomeProps> = ({ accessToken, bot, user, error }) => {
-  if (!bot) {
-    return <div>ERROR: CLIENT NOT FOUND</div>;
-  }
-
+  console.log(bot);
+  const user = userData?.user;
   return (
-    <>
-      {/* <WavesBackground /> */}
-      <Layout bot={bot} user={user} navItems={navItems} error={error || null}>
-        <MainContainer>
-          <IntroContainer>
-            <h1>{bot.username}</h1>
-            <p>Introduction text for the bot</p>
-            <div style={{ display: "flex" }}>
-              <Button
-                onClick={() =>
-                  (window.location.href =
-                    "http://localhost:3000/api/client/invite")
-                }
-              >
-                Invite the bot
-              </Button>
-              {user ? (
-                <Button href="/dashboard">Manage servers</Button>
-              ) : (
-                <Button
-                  onClick={() =>
-                    (window.location.href =
-                      "http://localhost:3000/api/discord/login")
-                  }
-                >
-                  Login
-                </Button>
-              )}
-            </div>
-          </IntroContainer>
+    <Layout bot={bot} user={user} navItems={navItems} error={null}>
+      <HeaderContainer>
+        <HeroTitle>{bot.username}</HeroTitle>
+        <HeroSubtitle>Introduction text for the bot</HeroSubtitle>
+        <HeroButton
+          href="http://localhost:3000/api/client/invite"
+          target="_blank"
+        >
+          Invite the bot
+        </HeroButton>{" "}
+        <Link
+          href={user ? "/guilds" : "http://localhost:3000/api/auth/login"}
+          passHref
+        >
+          <HeroButton>{user ? "Go to Servers" : "Log In"}</HeroButton>
+        </Link>
+      </HeaderContainer>
 
-          <FeaturesContainer>
-            <FeatureBlock>
-              <FeatureText>
-                <h2>Feature 1</h2>
-                <p>Feature 1 description</p>
-              </FeatureText>
-              <FeatureImage src="/feature1.png" alt="Feature 1" />
-            </FeatureBlock>
-            <FeatureBlock reverse>
-              <FeatureText>
-                <h2>Feature 2</h2>
-                <p>Feature 2 description</p>
-              </FeatureText>
-              <FeatureImage src="/feature2.png" alt="Feature 2" />
-            </FeatureBlock>
-            <FeatureBlock>
-              <FeatureText>
-                <h2>Feature 3</h2>
-                <p>Feature 3 description</p>
-              </FeatureText>
-              <FeatureImage src="/feature3.png" alt="Feature 1" />
-            </FeatureBlock>
-            {/* Add more FeatureBlock components for additional features */}
-          </FeaturesContainer>
-        </MainContainer>
-      </Layout>
-    </>
+      <FeaturesContainer>
+        <FeatureCard>
+          <FeatureImageWrapper>
+            <FeatureImage src="/feature1.png" />
+          </FeatureImageWrapper>
+          <FeatureText>
+            <h3>Feature 1</h3>
+            <p>Feature 1 description</p>
+          </FeatureText>
+        </FeatureCard>
+
+        <FeatureCard>
+          <FeatureImageWrapper>
+            <FeatureImage src="/feature2.png" />
+          </FeatureImageWrapper>
+          <FeatureText>
+            <h3>Feature 2</h3>
+            <p>Feature 2 description</p>
+          </FeatureText>
+        </FeatureCard>
+
+        <FeatureCard>
+          <FeatureImageWrapper>
+            <FeatureImage src="/feature3.png" />
+          </FeatureImageWrapper>
+          <FeatureText>
+            <h3>Feature 3</h3>
+            <p>Feature 3 description</p>
+          </FeatureText>
+        </FeatureCard>
+      </FeaturesContainer>
+    </Layout>
   );
 };
 
@@ -201,15 +202,9 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { access_token } = cookies(context);
-  const { user: bot } = await fetchClientData();
-  const { user, error } = await fetchUserData(access_token);
-
   return {
     props: {
       accessToken: access_token || null,
-      bot: bot || null,
-      user: user || null,
-      error: error || null,
     },
   };
 };

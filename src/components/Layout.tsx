@@ -25,35 +25,33 @@ const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        <Head>
-          <title>Your Dashboard</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        {bot && (user || error) && navItems && (
-          <Navbar
-            bot={bot}
-            user={user || null}
-            navItems={navItems}
-            error={error}
-            onLogin={handleLogin}
-          />
-        )}
-        <div style={{ backgroundColor: theme.colors.background }}>
-          <main>{children}</main>
-        </div>
-        {bot && (user || error) && navItems && (
-          <Navbar
-            bot={bot}
-            user={user || null}
-            navItems={navItems}
-            error={error}
-            onLogin={handleLogin}
-          />
-        )}
-      </>
-    </ThemeProvider>
+    <>
+      <Head>
+        <title>Your Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      {bot && (user || error) && navItems && (
+        <Navbar
+          bot={bot}
+          user={user || null}
+          navItems={navItems}
+          error={error}
+          onLogin={handleLogin}
+        />
+      )}
+      <div style={{ backgroundColor: theme.colors.background }}>
+        <main>{children}</main>
+      </div>
+      {bot && (user || error) && navItems && (
+        <Navbar
+          bot={bot}
+          user={user || null}
+          navItems={navItems}
+          error={error}
+          onLogin={handleLogin}
+        />
+      )}
+    </>
   );
 };
 

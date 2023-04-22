@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import User from "@/types/User";
+import Link from "next/link";
 
 interface NavbarProps {
   bot: User;
@@ -98,9 +99,9 @@ const Navbar: React.FC<NavbarProps> = ({
       <span>{bot.username}</span>
       <nav>
         {navItems.map((item, index) => (
-          <NavLink key={index} href={item.url}>
-            {item.name}
-          </NavLink>
+          <Link key={index} href={item.url} passHref>
+            <NavLink>{item.name}</NavLink>
+          </Link>
         ))}
       </nav>
       {user ? (
@@ -110,10 +111,12 @@ const Navbar: React.FC<NavbarProps> = ({
           </UserContainer>
           {dropdownOpen && (
             <DropdownMenu open={dropdownOpen}>
-              <DropdownMenuItem href="/settings">Settings</DropdownMenuItem>
-              <DropdownMenuItem href="http://localhost:3000/api/user/logout">
-                Logout
-              </DropdownMenuItem>
+              <Link href="/settings" passHref>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </Link>
+              <Link href="http://localhost:3000/api/user/logout" passHref>
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </Link>
             </DropdownMenu>
           )}
         </>

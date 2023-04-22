@@ -7,6 +7,7 @@ const theme = {
     text: "#dcddde",
     hover: "#4b4e56",
     border: "#ffffff",
+    block: "#2f3136",
   },
 };
 
