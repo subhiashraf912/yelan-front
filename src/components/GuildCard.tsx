@@ -1,8 +1,10 @@
 import Image from "next/image";
 import styled from "styled-components";
 import IGuild from "@/types/IGuild";
-
-const CardContainer = styled.div`
+interface CardContainerProps {
+  isBotMember: boolean;
+}
+const CardContainer = styled.div<CardContainerProps>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -16,6 +18,7 @@ const CardContainer = styled.div`
   overflow: hidden;
   box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  filter: ${({ isBotMember }) => (isBotMember ? "none" : "grayscale(1)")};
 
   &:hover {
     transform: translateY(-10px) scale(1.05);
@@ -90,15 +93,20 @@ const GuildCard: React.FC<GuildCardProps> = ({ guild, isBotMember }) => {
     .split(" ")
     .map((word) => word.charAt(0))
     .join("");
+  const placeholderImage = URL.createObjectURL(
+    new Blob(
+      [
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+        <rect width="100%" height="100%" fill="#CCCCCC"/>
+        <text x="50%" y="50%" font-size="40" text-anchor="middle" dy=".3em" fill="#FFFFFF">${nameInitials}</text>
+      </svg>`,
+      ],
+      { type: "image/svg+xml" }
+    )
+  );
 
-  const placeholderImage = `data:image/svg+xml,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-      <rect width="100%" height="100%" fill="#CCCCCC"/>
-      <text x="50%" y="50%" font-size="40" text-anchor="middle" dy=".3em" fill="#FFFFFF">${nameInitials}</text>
-    </svg>`
-  )}`;
   return (
-    <CardContainer>
+    <CardContainer isBotMember={isBotMember!}>
       <LightSweep className="light-sweep" />
       <GuildIcon>
         {icon ? (

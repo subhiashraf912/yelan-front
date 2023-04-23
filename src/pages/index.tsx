@@ -156,7 +156,7 @@ const Home: React.FC<HomeProps> = ({ accessToken }) => {
           Invite the bot
         </HeroButton>{" "}
         <Link
-          href={user ? "/guilds" : "http://localhost:3000/api/auth/login"}
+          href={user ? "/guilds" : "http://localhost:3000/api/discord/login"}
           passHref
         >
           <HeroButton>{user ? "Go to Servers" : "Log In"}</HeroButton>

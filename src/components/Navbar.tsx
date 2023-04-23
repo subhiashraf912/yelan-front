@@ -3,10 +3,10 @@ import React, { use, useState } from "react";
 import styled from "styled-components";
 import User from "@/types/User";
 import Link from "next/link";
+import { isExternalUrl } from "@/utils/constants";
 
 interface NavbarProps {
   bot: User;
-  userUsername:string
   user: User | null;
   navItems: { url: string; name: string }[];
   error: string | null;
@@ -25,7 +25,7 @@ const NavbarContainer = styled.div`
   top: 0;
   z-index: 100;
 `;
- 
+
 const NavLink = styled.a`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.text};
@@ -94,31 +94,46 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   const userAvatarUrl = `https://cdn.discordapp.com/avatars/${user?.id}/${user?.avatar}.png`;
- 
+
   return (
     <NavbarContainer>
       <span>{bot.username}</span>
       <nav>
-        {navItems.map((item, index) => (
-          <Link key={index} href={item.url} passHref>
-            <NavLink>{item.name}</NavLink>
-          </Link>
-        ))}
+        {navItems.map((item, index) =>
+          isExternalUrl(item.url) ? (
+            <NavLink key={index} href={item.url}>
+              {item.name}
+            </NavLink>
+          ) : (
+            <Link key={index} href={item.url} passHref>
+              <NavLink>{item.name}</NavLink>
+            </Link>
+          )
+        )}
       </nav>
       {user ? (
         <>
           <UserContainer onClick={toggleDropdown}>
             <Avatar src={userAvatarUrl} alt={`${user.username} avatar`} />
-         <span >{user.username}{user.discriminator}</span>
+            <span>
+              {user.username}
+              {user.discriminator}
+            </span>
           </UserContainer>
           {dropdownOpen && (
             <DropdownMenu open={dropdownOpen}>
               <Link href="/settings" passHref>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
               </Link>
-              <Link href="http://localhost:3000/api/user/logout" passHref>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </Link>
+              {isExternalUrl("http://localhost:3000/api/user/logout") ? (
+                <DropdownMenuItem href="http://localhost:3000/api/user/logout">
+                  Logout
+                </DropdownMenuItem>
+              ) : (
+                <Link href="http://localhost:3000/api/user/logout" passHref>
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </Link>
+              )}
             </DropdownMenu>
           )}
         </>

@@ -39,18 +39,11 @@ const Layout: React.FC<LayoutProps> = ({
           onLogin={handleLogin}
         />
       )}
-      <div style={{ backgroundColor: theme.colors.background }}>
-        <main>{children}</main>
+      <div
+        style={{ minHeight: "100vh", backgroundColor: theme.colors.background }}
+      >
+        <main style={{ minHeight: "100vh" }}>{children}</main>
       </div>
-      {bot && (user || error) && navItems && (
-        <Navbar
-          bot={bot}
-          user={user || null}
-          navItems={navItems}
-          error={error}
-          onLogin={handleLogin}
-        />
-      )}
     </>
   );
 };
