@@ -6,7 +6,6 @@ import { fetchGuildsData as fetchGuildData } from "@/utils/api/guilds/fetchGuild
 import Layout from "@/components/Layout";
 import styled from "styled-components";
 import GuildCard from "@/components/GuildCard";
-import User from "@/types/User";
 import { navItems } from "@/utils/constants";
 import { useUserData } from "@/hooks/useUserData";
 import { useUserGuilds } from "@/hooks/useUserGuilds";
@@ -45,8 +44,6 @@ const Guilds: React.FC<GuildsProps> = ({ accessToken }) => {
   }
   const { managedMutualGuilds, managedUnmutualGuilds } = guilds!;
   const user = userData?.user!;
-
-  clientData?.user;
   return (
     <Layout navItems={navItems} bot={clientData?.user} user={user} error={null}>
       <GuildsContainer>

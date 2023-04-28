@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import User from "@/types/User";
-import { fetchUserData } from "@/utils/api/fetchUserData";
-import { fetchClientData } from "@/utils/api/fetchClientData";
 import Layout from "@/components/Layout";
 import cookies from "next-cookies";
 import { GetServerSideProps } from "next";

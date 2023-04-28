@@ -17,3 +17,24 @@ const utf8ToBase64 = (str: string) => {
 };
 
 export { navItems, isExternalUrl, utf8ToBase64 };
+
+// data/features.ts
+import { IFeature } from "@/types/IFeature";
+
+export const features: IFeature[] = [
+  {
+    id: "1",
+    name: "welcomer",
+    displayName: "Welcomer",
+    description: "Welcomes new members to your server.",
+    icon: "https://cdn.discordapp.com/attachments/831105674016063508/1100107297704906873/greeting-sign-hello-symbol.png",
+  },
+  {
+    id: "2",
+    description: "Logs all messages sent in your server.",
+    icon: "https://cdn.discordapp.com/attachments/831105674016063508/1100107656020103239/notebook-pencil-icon-isolated-white-background-vector-illustration_736051-693.png",
+    name: "logs-system",
+    displayName: "Logs System",
+  },
+  // ... more feature objects
+];

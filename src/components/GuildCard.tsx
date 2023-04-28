@@ -1,6 +1,8 @@
 import Image from "next/image";
 import styled from "styled-components";
 import IGuild from "@/types/IGuild";
+import Link from "next/link";
+import Button from "./ui/Button";
 interface CardContainerProps {
   isBotMember: boolean;
 }
@@ -65,22 +67,6 @@ const GuildName = styled.h2`
   font-size: 18px;
   margin-bottom: 10px;
 `;
-const Button = styled.a`
-  display: inline-block;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.text};
-  padding: 8px 16px;
-  margin-top: 12px;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.hover};
-    color: ${({ theme }) => theme.colors.text};
-    transform: translateY(-2px);
-  }
-`;
 
 interface GuildCardProps {
   guild: IGuild;
@@ -129,7 +115,9 @@ const GuildCard: React.FC<GuildCardProps> = ({ guild, isBotMember }) => {
       </GuildIcon>
       <GuildName>{name}</GuildName>
       {isBotMember ? (
-        <Button href={`/guilds/${id}`}>Manage Guild</Button>
+        <Button>
+          <Link href={`/guilds/${id}`}>Manage Guild</Link>
+        </Button>
       ) : (
         <Button
           href={`http://localhost:3000/api/client/add-guild?guildId=${id}`}

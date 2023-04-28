@@ -21,7 +21,8 @@ const NavbarContainer = styled.div`
   color: ${({ theme }) => theme.colors.text};
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: visible;
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 100;
 `;

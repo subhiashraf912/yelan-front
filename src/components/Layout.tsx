@@ -1,6 +1,5 @@
 import React from "react";
-import { ThemeProvider } from "styled-components";
-import theme from "@/theme";
+import useTheme from "@/hooks/application/useTheme";
 import Head from "next/head";
 import Navbar from "./Navbar";
 import User from "@/types/User";
@@ -23,6 +22,7 @@ const Layout: React.FC<LayoutProps> = ({
   const handleLogin = () => {
     window.location.href = "http://localhost:3000/api/discord/login";
   };
+  const theme = useTheme();
 
   return (
     <>

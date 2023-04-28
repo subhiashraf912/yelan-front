@@ -1,5 +1,6 @@
 // src/theme.ts
-const theme = {
+
+const DefaultTheme = {
   colors: {
     primary: "#7289da",
     secondary: "#99aab5",
@@ -8,7 +9,8 @@ const theme = {
     hover: "#4b4e56",
     border: "#ffffff",
     block: "#2f3136",
+    disabled: "#2f3136",
   },
 };
 
-export default theme;
+export { DefaultTheme };
