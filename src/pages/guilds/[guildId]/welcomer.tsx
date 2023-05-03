@@ -81,7 +81,8 @@ const Welcomer: React.FC<WelcomerProps> = ({ accessToken }) => {
   if (isLoading || channelsLoading) return <div>Loading...</div>;
   if (isError || channelsError) return <div>Error</div>;
 
-  const { welcomeSystem } = data!;
+  const { welcomeSystem, welcomeScreenSettings } = data!;
+  console.log(welcomeSystem, welcomeScreenSettings);
 
   return (
     <Layout
@@ -104,7 +105,11 @@ const Welcomer: React.FC<WelcomerProps> = ({ accessToken }) => {
             welcomeSystem={welcomeSystem}
           />
         )}
-        {activePage === "screen" && <WelcomeScreenSettings />}
+        {activePage === "screen" && (
+          <WelcomeScreenSettings
+            welcomeScreenSettings={welcomeScreenSettings}
+          />
+        )}
       </Container>
     </Layout>
   );

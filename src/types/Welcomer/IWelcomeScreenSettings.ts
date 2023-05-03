@@ -1,3 +1,19 @@
+export interface CanvasTextElement {
+  shadow: {
+    shadowColor: string;
+    shadowBlur: number;
+    shadowOffsetX: number;
+    shadowOffsetY: number;
+  };
+  color: string;
+  text: string;
+  size: number;
+  font: string;
+  x: number;
+  y: number;
+  align: string;
+}
+
 export interface IWelcomeScreenSettings {
   avatar: {
     stroke: {
@@ -14,51 +30,9 @@ export interface IWelcomeScreenSettings {
     x: number;
     y: number;
   };
-  welcomeText: {
-    shadow: {
-      shadowColor: string;
-      shadowBlur: number;
-      shadowOffsetX: number;
-      shadowOffsetY: number;
-    };
-    color: string;
-    text: string;
-    size: number;
-    font: string;
-    x: number;
-    y: number;
-    align: string;
-  };
-  subtitleText: {
-    shadow: {
-      shadowColor: string;
-      shadowBlur: number;
-      shadowOffsetX: number;
-      shadowOffsetY: number;
-    };
-    color: string;
-    text: string;
-    size: number;
-    font: string;
-    x: number;
-    y: number;
-    align: string;
-  };
-  memberCountText: {
-    shadow: {
-      shadowColor: string;
-      shadowBlur: number;
-      shadowOffsetX: number;
-      shadowOffsetY: number;
-    };
-    color: string;
-    text: string;
-    size: number;
-    font: string;
-    x: number;
-    y: number;
-    align: string;
-  };
+  welcomeText: CanvasTextElement;
+  subtitleText: CanvasTextElement;
+  memberCountText: CanvasTextElement;
   overlay: {
     opacity: number;
     margin: number;
