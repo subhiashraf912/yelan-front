@@ -43,3 +43,14 @@ export interface IWelcomeScreenSettings {
   backgroundColor: string;
   backgroundImageUrl: string;
 }
+
+export type WelcomeScreenSettingsWithoutBackground = Omit<
+  IWelcomeScreenSettings,
+  | "guildId"
+  | "width"
+  | "height"
+  | "backgroundColor"
+  | "backgroundImageUrl"
+  | "stroke"
+  | "overlay"
+>;

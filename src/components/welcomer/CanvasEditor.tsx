@@ -3,21 +3,24 @@ import ElementSettings from "./ElementSettings";
 import {
   CanvasTextElement,
   IWelcomeScreenSettings,
+  WelcomeScreenSettingsWithoutBackground,
 } from "@/types/Welcomer/IWelcomeScreenSettings";
+import ElementPicker from "../ui/ElementPicker";
+import styled from "styled-components";
 interface CanvasEditorProps {
   settings: IWelcomeScreenSettings;
   onSave: (newSettings: IWelcomeScreenSettings) => void;
 }
-type WelcomeScreenSettingsWithoutBackground = Omit<
-  IWelcomeScreenSettings,
-  | "guildId"
-  | "width"
-  | "height"
-  | "backgroundColor"
-  | "backgroundImageUrl"
-  | "stroke"
-  | "overlay"
->;
+const CanvasContainer = styled.div`
+  display: inline-block;
+  position: relative;
+  margin-right: 1rem;
+  @media (max-width: 768px) {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+`;
 
 const CanvasEditor: React.FC<CanvasEditorProps> = ({ settings, onSave }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -486,33 +489,30 @@ const CanvasEditor: React.FC<CanvasEditorProps> = ({ settings, onSave }) => {
   };
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        width={settings.width}
-        height={settings.height}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        style={{ border: "1px solid #ccc" }}
-      ></canvas>
-      {selectedElement && (
-        <div>
-          <h3>{selectedElement} settings:</h3>
-          <ElementSettings
-            settings={
-              localSettings[
-                selectedElement as keyof IWelcomeScreenSettings
-              ] as Record<string, any>
-            }
-            onChange={handleElementSettingsChange}
-          />
-        </div>
-      )}
-    </>
+    <div>
+      <CanvasContainer>
+        <canvas
+          ref={canvasRef}
+          width={settings.width}
+          height={settings.height}
+          onClick={handleClick}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+        />
+        <ElementPicker
+          localSettings={localSettings}
+          onSelect={(elementKey) => setSelectedElement(elementKey)}
+          setLocalSettings={setLocalSettings}
+          onDeselect={() => setSelectedElement(null)}
+        />
+      </CanvasContainer>
+    </div>
   );
 };
 

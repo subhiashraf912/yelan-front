@@ -36,10 +36,10 @@ const WelcomeScreenSettings = ({
           Use the canvas editor below to adjust the settings for your welcome
           screen.
         </p>
-        <CanvasWrapper>
-          <CanvasEditor settings={settings} onSave={handleSave} />
-        </CanvasWrapper>
-        {/* <button onClick={() => console.log(settings)}>Submit</button> */}
+        {/* <CanvasWrapper> */}
+        <CanvasEditor settings={settings} onSave={handleSave} />
+        {/* </CanvasWrapper> */}
+        <button onClick={() => console.log(settings)}>Submit</button>
       </WelcomeScreenSettingsWrapper>
     </FormContainer>
   );
